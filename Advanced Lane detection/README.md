@@ -1,22 +1,20 @@
 # Advanced Lane Finding
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+
 
 ## Overview
 
 A lane detection and tracking program that uses a traditional (i.e. non-machine-learning) computer vision approach to detect lane lines is implemented here.
 
 <p align="center">
-  <img src="./results/P4_adv_lane_lines_project_video.gif" width="480">
+  <img src="https://github.com/Sushruthan222/ML-OpenCv-projects/blob/main/Advanced%20Lane%20detection/output%20gif.gif" width="480">
 </p>
 
-## Dependencies
-
-If you have already installed all the necessary dependencies for the projects in term 1 you should be good to go! If not, you should install them to get started on this project => [Getting Started for Term 1](../term1_How_to_get_started). 
+ 
  
 ## Basic Build Instructions
 
 1. Clone or fork this repository.
-2. Launch the Jupyter notebook: `jupyter notebook P4_adv_lane_lines.ipynb`
+2. Launch the Jupyter notebook: 
 3. Execute the code cells you are interested in. 
 Note that cells may depend on previous cells. The notebook explains clearly what each code cell does.
 
@@ -52,7 +50,7 @@ This is best done using an chessboard as this is regular, has a high contrast pa
 
 OpenCV provide some really helpful built-in functions for the task on camera calibration. First of all, to detect the calibration pattern in the [calibration images](./camera_cal/), we can use the function `cv2.findChessboardCorners(image, pattern_size)`. identify the locations of corners on a series of pictures of a chessboard taken from different angles.
 
-![dist_undist_images](./img/dist_undist_images.png)
+![dist_undist_images](./samples/dist_undist_images.png)
 
 Once we have stored the correspondeces between 3D world and 2D image points for a bunch of images, we can proceed to actually calibrate the camera through `cv2.calibrateCamera()`. The locations of the chessboard corners were used as input to this OpenCV function. Among other things, this function returns both the *camera matrix* and the *distortion coefficients*, which we can use to undistort the frames.
 
@@ -61,9 +59,9 @@ Once we have stored the correspondeces between 3D world and 2D image points for 
 
 Once the camera is calibrated, we can use the camera matrix and distortion coefficients we found to remove distortion from highway driving images. Indeed, if we want to study the *geometry* of the road, we have to be sure that the images we're processing do not present distortions. Here's the result of distortion-correction on one of the test images:
 
-![dist_undist_highway_01](./img/dist_undist_highway_01.png)
+![dist_undist_highway_01](./samples/dist_undist_highway_01.png)
 
-![dist_undist_highway_02](./img/dist_undist_highway_02.png)
+![dist_undist_highway_02](./samples/dist_undist_highway_02.png)
 
 Notice that if you compare each two images, especially around the edges, there are obvious differences between the original and undistorted image, indicating that distortion has been removed from the original image.
 
@@ -100,15 +98,15 @@ There are several threshold functions which could be used to generate a binary i
   A combination of different binary thresholds, to create one combination thresholded image does a great job of highlighting almost all of the white and yellow lane lines.
 
 <p align="center">
-  <img src="./img/threshold_01.png" width="960">
+  <img src="./samples/threshold_01.png" width="960">
 </p>
 
 <p align="center">
-  <img src="./img/threshold_02.png" width="960">
+  <img src="./samples/threshold_02.png" width="960">
 </p>
 
 <p align="center">
-  <img src="./img/threshold_03.png" width="960">
+  <img src="./samples/threshold_03.png" width="960">
 </p>
 
 ### Step 3: Perspective Transform
@@ -120,12 +118,12 @@ The following image shows the original image with the rectangle source points on
   <tr>
     <th>
       <p align="center">
-           <img src="./img/ori_warped_01.png" width="100%" height="100%">
+           <img src="./samples/ori_warped_01.png" width="100%" height="100%">
       </p>
     </th>
     <th>
       <p align="center">
-           <img src="./img/ori_warped_02.png" width="100%" height="100%">
+           <img src="./samples/ori_warped_02.png" width="100%" height="100%">
       </p>
     </th>
   </tr>
@@ -134,14 +132,14 @@ The following image shows the original image with the rectangle source points on
 Below an other example of a curved lane is shown, with a binary thresholded and warped image, as it is needed for the further steps:
 
 <p align="center">
-  <img src="./img/ori_warped_03.png" width="960">
+  <img src="./samples/ori_warped_03.png" width="960">
 </p>
 
 ### Step 4: Fit a polynomial to the lane lines
 To meet the goal of transforming the lane line pixels in a curved function form, the pixels must be identified first. Here we use a histogram along the driveway in the lower half of the image to identify the most prominent regions in the x direction of the image where we can expect the lanes to be. The histogram below shows a situation where the left line is definitely visible and identifiable but the right lane is more or less covered by noise.
 
 <p align="center">
-  <img src="./img/histogram.png" width="480">
+  <img src="./samples/histogram.png" width="480">
 </p>
 
 In order to identify which pixels of a given binary image belong to lane-lines, there are (at least) two possibilities. If a brand new frame arises, for whom it was never identified where the lane-lines are, an exhaustive search on the frame must be performed. This search is implemented in `slide_win_poly()`: starting from the bottom of the image, we slide two windows towards the upper side of the image, deciding which pixels belong to which lane-line. As a starting point we use precisely the position of the maximum peaks in the histogram of the binary image as well as the knowledge of the roadway width when we are dealing with noisy data.
@@ -151,11 +149,11 @@ On the other hand, if we're processing a video and we confidently identified lan
 One way to calculate the curvature of a lane line, is to fit a 2nd degree polynomial to that line, and from this you can easily extract useful information. After identifying an complete array of line pixels a polynomial is fitted to each lane using the numpy function `numpy.polyfit()`.
 
 <p align="center">
-  <img src="./img/polynomial_approx_01.png" width="480">
+  <img src="./samples/polynomial_approx_01.png" width="480">
 </p>
 
 <p align="center">
-  <img src="./img/polynomial_approx_02.png" width="480">
+  <img src="./samples/polynomial_approx_02.png" width="480">
 </p>
 
 ### Steps 5: Determine curvature of the lane and vehicle position with respect to center
@@ -172,10 +170,10 @@ The final step in processing the images was to plot the polynomials onto the war
 Subsequently the distance from center and radius of curvature was printed to the final annotated image.
 
 <p align="center">
-  <img src="./img/goal_image_01.png" width="960">
+  <img src="./samples/goal_image_01.png" width="960">
 </p>
 
-All other test images can be found in [./results/](./results/)
+All other test images can be found in ["https://github.com/Sushruthan222/ML-OpenCv-projects/tree/main/Advanced%20Lane%20detection/Output%20result%20Videos"]
 
 ## Video Processing Pipeline:
 After establishing a pipeline to process still images, the final step was to expand the pipeline to process videos frame-by-frame, to simulate what it would be like to process an image stream in real time on an actual vehicle. 
@@ -187,19 +185,11 @@ The video pipeline first checks whether or not the lane was detected in the prev
 If at any time, the pipeline fails to detect lane pixels based on the previous frame, it will go back in to blind search mode and scan the entire binary image for nonzero pixels to represent the lanes.
 
 In order to make the output smooth I chose to average the coefficients of the polynomials for each lane line over a span of 10 frames. The gif below is the result of my pipeline running on the test video provided for the project, as well as an  optional challenge video which presented additional challenges to the lane detection pipeline.
-
-|Project Video|Challenge Video|
-|-------------|-------------|
-|![Final Result Gif](./results/P4_adv_lane_lines_project_video.gif)|![Challenge Video](./results/P4_adv_lane_lines_challenge_video.gif)|
+<p align="center">
+  <img src="https://github.com/Sushruthan222/ML-OpenCv-projects/blob/main/Advanced%20Lane%20detection/output%20gif.gif" width="480">
+</p>
 
 ## Results
 
-The resulting [videos](./results/) are in the repo, if you are interested. 
+The resulting (./Output result Videos/) are in the repo, if you are interested. 
 
-## Contributing
-
-No further updates nor contributions are requested.  This project is static.
-
-## License
-
-Term1_project4_advanced_lane_finding results are released under the [MIT License](./LICENSE)
