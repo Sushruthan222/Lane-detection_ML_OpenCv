@@ -191,5 +191,5 @@ In order to make the output smooth I chose to average the coefficients of the po
 
 ## Results
 
-The resulting (./Output result Videos/) are in the repo, if you are interested. 
+The resulting [output video](https://github.com/Sushruthan222/ML-OpenCv-projects/tree/main/Advanced%20Lane%20detection/Output%20result%20Videos) are in the repo, if you are interested. 
 
